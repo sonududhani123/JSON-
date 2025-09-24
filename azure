@@ -1,0 +1,5 @@
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: '<Your-Service-Connection>'
+    appName: '<Your-App-Service-Name>'
+    package: '$(Pipeline.Workspace)/drop/demo-app.zip'
