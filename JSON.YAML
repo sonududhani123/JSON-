@@ -1,0 +1,39 @@
+trigger:
+- main   # Run when pushing to main branch
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+# Step 1: Checkout code
+- task: Checkout@1
+
+# Step 2: Install Node.js
+- task: NodeTool@0
+  inputs:
+    versionSpec: '16.x'
+  displayName: 'Install Node.js'
+
+# Step 3: Install dependencies
+- script: npm install
+  displayName: 'Install dependencies'
+
+# Step 4: Run tests
+- script: npm test
+  displayName: 'Run tests'
+
+# Step 5: Archive and publish build artifact
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.SourcesDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/demo-app.zip'
+    replaceExistingArchive: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
